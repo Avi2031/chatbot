@@ -1,0 +1,35 @@
+import socket
+import threading
+
+def receive():
+    while True:
+        try:
+            message = client_socket.recv(1024).decode('utf8')
+            if message == 'exit':
+                break
+            print(message)
+        except:
+            break
+
+def send(message):
+    client_socket.send(message.encode('utf8'))
+
+def chat():
+    while True:
+        message = input("")
+        send(message)
+        if message == 'exit':
+            break
+
+host = '127.0.0.1'
+port = 55555
+
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket.connect((host, port))
+
+receive_thread = threading.Thread(target=receive)
+receive_thread.start()
+
+chat()
+
+client_socket.close()
